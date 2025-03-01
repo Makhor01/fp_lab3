@@ -23,7 +23,7 @@ let test_generate() =
 
 let () =
   let interpolation_tests = [
-    test_case "Linear interpolation" `Quick test_linea;
+    test_case "Linear interpolation" `Quick test_linear;
     test_case "Lagrange interpolation" `Quick test_lagrange;
     test_case "Generate x values" `Quick test_generate;
   ] in
