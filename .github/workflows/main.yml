@@ -1,0 +1,39 @@
+name: OCaml CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up OCaml
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: '4.14.0'
+
+    - name: Remove existing switch (if any)
+      run: |
+        eval $(opam env)
+        opam switch remove . --yes || true  # Игнорировать ошибку, если переключатель не существует
+
+    - name: Install dependencies
+      run: |
+        eval $(opam env)
+        opam switch create . --deps-only  # Создать новый переключатель
+        opam install alcotest qcheck qcheck-alcotest
+
+    - name: Build and test
+      run: |
+        eval $(opam env)
+        dune build
+        dune runtest
